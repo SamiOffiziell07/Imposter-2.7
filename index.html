@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Imposter">
+  <meta name="format-detection" content="telephone=no">
+  <title>IMPOSTER · SAMIX</title>
+  <link rel="icon" type="image/png" href="favicon-64.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    /* Ladebildschirm: bewusst inline, damit er sofort sichtbar ist */
+    #splash { --sp-bg: #07080d; --sp-top: #1a1d3f; --sp-fg: #f5f5fa; --sp-glow: rgba(124,92,255,.22); --sp-shadow: rgba(124,92,255,.5);
+      --sp-track: rgba(255,255,255,.12); --sp-b1: #6c63ff; --sp-b2: #a78bfa; --sp-b3: #22d3ee; --sp-shine: rgba(255,255,255,.55);
+      --sp-l1: #f5f5fa; --sp-l2: #dfd7fa; --sp-l3: #c8b8fa; --sp-l4: #b29afa; --sp-l5: #9495f8; --sp-l6: #6eaaf5; --sp-l7: #48bef1; --sp-l8: #22d3ee; --sp-muted: rgba(245,245,250,.66); }
+    #splash[data-sp="light"] { --sp-bg: #f2f2f7; --sp-top: #e4e4f5; --sp-fg: #0e0e12; --sp-glow: rgba(94,92,230,.16); --sp-shadow: rgba(94,92,230,.28);
+      --sp-track: rgba(60,60,67,.14); --sp-b1: #5e5ce6; --sp-b2: #7d7aff; --sp-b3: #0ea5c6; --sp-shine: rgba(255,255,255,.6);
+      --sp-l1: #0e0e12; --sp-l2: #25244f; --sp-l3: #3c3b8b; --sp-l4: #5351c8; --sp-l5: #5366e1; --sp-l6: #3c7bd8; --sp-l7: #2590cf; --sp-l8: #0ea5c6; --sp-muted: rgba(14,14,18,.62); }
+    #splash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: var(--sp-bg); background: radial-gradient(1100px 760px at 50% -12%, var(--sp-top) 0%, var(--sp-bg) 62%), var(--sp-bg); color: var(--sp-fg);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+      transition: opacity .4s cubic-bezier(.4,0,.2,1), transform .4s cubic-bezier(.4,0,.2,1); will-change: opacity; }
+    #splash.out { opacity: 0; transform: scale(1.025); pointer-events: none; }
+    #splash .sp-stack { position: relative; display: flex; flex-direction: column; align-items: center; transform: translateY(-2.5vh); }
+    #splash .sp-glow { position: absolute; left: 50%; top: 38%; width: min(92vw, 560px); height: min(92vw, 560px); margin: calc(min(92vw, 560px) / -2) 0 0 calc(min(92vw, 560px) / -2);
+      border-radius: 50%; pointer-events: none; opacity: 0;
+      background: radial-gradient(closest-side, var(--sp-glow), rgba(0,0,0,0));
+      animation: spGlowIn 1.4s ease .1s forwards, spBreath 4.8s ease-in-out 1.5s infinite; }
+    #splash .sp-logo { position: relative; display: block; color: var(--sp-fg); filter: drop-shadow(0 14px 34px var(--sp-shadow)); width: auto; aspect-ratio: 1248 / 1521;
+      height: clamp(104px, 22vh, 176px); height: clamp(104px, 22dvh, 176px); opacity: 0;
+      animation: spLogo .8s cubic-bezier(.16,1,.3,1) .05s forwards; user-select: none; -webkit-user-drag: none; }
+    #splash .sp-word { position: relative; display: flex; justify-content: center; margin-top: clamp(18px, 3.4vh, 26px); margin-right: -.2em;
+      font-size: clamp(27px, 8.4vw, 38px); line-height: 1; font-weight: 800; letter-spacing: .2em; color: var(--sp-fg); user-select: none; }
+    #splash .sp-word span { display: inline-block; opacity: 0; animation: spLetter .55s cubic-bezier(.16,1,.3,1) forwards; }
+    #splash .sp-word span:nth-child(1) { color: var(--sp-l1); animation-delay: 0.12s; }
+    #splash .sp-word span:nth-child(2) { color: var(--sp-l2); animation-delay: 0.18s; }
+    #splash .sp-word span:nth-child(3) { color: var(--sp-l3); animation-delay: 0.24s; }
+    #splash .sp-word span:nth-child(4) { color: var(--sp-l4); animation-delay: 0.30s; }
+    #splash .sp-word span:nth-child(5) { color: var(--sp-l5); animation-delay: 0.36s; }
+    #splash .sp-word span:nth-child(6) { color: var(--sp-l6); animation-delay: 0.42s; }
+    #splash .sp-word span:nth-child(7) { color: var(--sp-l7); animation-delay: 0.48s; }
+    #splash .sp-word span:nth-child(8) { color: var(--sp-l8); animation-delay: 0.54s; }
+    #splash .sp-bar { position: relative; width: min(46vw, 176px); height: 4px; margin-top: clamp(26px, 5.2vh, 40px); border-radius: 4px; overflow: hidden;
+      background: var(--sp-track); opacity: 0; animation: spFade .5s ease .3s forwards; transform: translateZ(0); }
+    #splash .sp-fill { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 4px; overflow: hidden;
+      background: linear-gradient(90deg, var(--sp-b1), var(--sp-b2) 60%, var(--sp-b3)); transform: translate3d(-100%, 0, 0);
+      will-change: transform; }
+    #splash .sp-fill::after { content: ""; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0), var(--sp-shine), rgba(255,255,255,0)); transform: translate3d(-110%, 0, 0);
+      animation: spShine 1.7s cubic-bezier(.45,0,.25,1) .9s infinite; }
+    #splash .sp-pct { position: relative; margin-top: 14px; min-width: 4ch; text-align: center; font-size: 16px; line-height: 1; font-weight: 600; letter-spacing: .02em;
+      font-variant-numeric: tabular-nums; -webkit-font-feature-settings: "tnum"; font-feature-settings: "tnum"; color: var(--sp-fg); opacity: 0; animation: spPct .5s ease .3s forwards; user-select: none; }
+    #splash .sp-err { display: none; position: relative; margin-top: 30px; padding: 0 28px; text-align: center; max-width: 360px; }
+    #splash .sp-err h2 { margin: 0 0 8px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+    #splash .sp-err p { margin: 0 0 18px; font-size: 14.5px; line-height: 1.5; color: var(--sp-muted); }
+    #splash .sp-err button { appearance: none; -webkit-appearance: none; border: 0; min-height: 50px; padding: 0 28px; border-radius: 15px; background: var(--sp-fg); color: var(--sp-bg); font-size: 16.5px; font-weight: 650; cursor: pointer; font-family: inherit; }
+    #splash.failed .sp-bar, #splash.failed .sp-pct { display: none; }
+    #splash.failed .sp-err { display: block; }
+    @keyframes spLogo { from { opacity: 0; transform: translateY(10px) scale(.94); } to { opacity: 1; transform: none; } }
+    @keyframes spLetter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    @keyframes spFade { to { opacity: 1; } }
+    @keyframes spPct { to { opacity: .82; } }
+    @keyframes spGlowIn { to { opacity: 1; } }
+    @keyframes spBreath { 0%,100% { transform: scale(.96); opacity: .8; } 50% { transform: scale(1.04); opacity: 1; } }
+    @keyframes spShine { 0% { transform: translate3d(-110%, 0, 0); } 70%,100% { transform: translate3d(190%, 0, 0); } }
+    @media (prefers-reduced-motion: reduce) {
+      #splash .sp-glow { animation: spGlowIn .6s ease forwards; }
+      #splash .sp-logo { animation: spFade .5s ease forwards; }
+      #splash .sp-word span { animation: spFade .5s ease forwards; }
+      #splash .sp-fill::after { animation: none; display: none; }
+      #splash .sp-pct { animation: spPct .4s ease forwards; }
+      #splash { transition: opacity .25s ease; } #splash.out { transform: none; }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ladebildschirm (SAMIX) -->
+  <div id="splash" role="status" aria-live="polite" aria-label="Yükleniyor">
+    <div class="sp-stack">
+      <span class="sp-glow" aria-hidden="true"></span>
+      <svg class="sp-logo" id="splashLogo" xmlns="http://www.w3.org/2000/svg" focusable="false" viewBox="0 0 1248 1521" role="img" aria-label="SAMIX"><defs><linearGradient id="gA-sp" gradientUnits="userSpaceOnUse" x1="382.59" y1="321.03" x2="549.78" y2="461.32"><stop offset="0" stop-color="currentColor"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient><linearGradient id="gB-sp" gradientUnits="userSpaceOnUse" x1="867.41" y1="1201.97" x2="700.22" y2="1061.68"><stop offset="0" stop-color="currentColor"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient><clipPath id="cxA-sp"><path clip-rule="evenodd" d="M0,0H1248V1521H0Z M381,696.01 L172.75,575.78 L254.03,478.92 L275.6,491.37 L275.6,488.37 L381,549.22Z"/></clipPath><clipPath id="cxB-sp"><path clip-rule="evenodd" d="M0,0H1248V1521H0Z M869,826.99 L1077.25,947.22 L995.97,1044.08 L974.4,1031.63 L974.4,1034.63 L869,973.78Z"/></clipPath><clipPath id="cwA-sp"><path d="M381,696.01 L170.11,574.26 L253.09,475.37 L381,549.22Z"/></clipPath><clipPath id="cwB-sp"><path d="M869,826.99 L1079.89,948.74 L996.91,1047.63 L869,973.78Z"/></clipPath></defs><g fill="currentColor"><polygon points="385.29,555.6 385.29,694.34 737.99,897.97 624.86,963.29 385.6,825.15 385.6,967.53 625.03,1105.77 864.71,967.4 864.71,828.66 512.01,625.03 625.14,559.71 864.4,697.85 864.4,555.47 624.97,417.23"/><polygon clip-path="url(#cxA-sp)" points="148.93,558.03 376.73,689.55 376.73,546.75 275.6,488.37 625.04,286.61 976.98,489.8 976.98,762.74 1100.97,834.33 1100.97,418.89 625.03,144.11 148.93,418.99"/><polygon clip-path="url(#cxB-sp)" points="1101.07,964.97 873.27,833.45 873.27,976.25 974.4,1034.63 624.96,1236.39 273.02,1033.2 273.02,760.26 149.03,688.67 149.03,1104.11 624.97,1378.89 1101.07,1104.01"/></g><g clip-path="url(#cwA-sp)"><polygon fill="url(#gA-sp)" points="148.93,558.03 376.73,689.55 376.73,546.75 275.6,488.37 625.04,286.61 976.98,489.8 976.98,762.74 1100.97,834.33 1100.97,418.89 625.03,144.11 148.93,418.99"/></g><g clip-path="url(#cwB-sp)"><polygon fill="url(#gB-sp)" points="1101.07,964.97 873.27,833.45 873.27,976.25 974.4,1034.63 624.96,1236.39 273.02,1033.2 273.02,760.26 149.03,688.67 149.03,1104.11 624.97,1378.89 1101.07,1104.01"/></g></svg>
+      <div class="sp-word" aria-label="IMPOSTER"><span aria-hidden="true">I</span><span aria-hidden="true">M</span><span aria-hidden="true">P</span><span aria-hidden="true">O</span><span aria-hidden="true">S</span><span aria-hidden="true">T</span><span aria-hidden="true">E</span><span aria-hidden="true">R</span></div>
+      <div class="sp-bar" aria-hidden="true"><div class="sp-fill" id="splashFill"></div></div>
+      <div class="sp-pct" id="splashPct" aria-hidden="true">0%</div>
+      <div class="sp-err" id="splashErr">
+        <h2>Oyun yüklenemedi</h2>
+        <p id="splashErrMsg">Bazı dosyalar yüklenemedi. İnternet bağlantınızı ve dosyaların eksiksiz olduğunu kontrol edin.</p>
+        <button type="button" id="splashRetry">Tekrar Dene</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    /* Ladebildschirm-Steuerung mit echtem Fortschritt (0–100 %).
+       Quellen: jede Spieldatei meldet sich nach dem Laden (__samixStep, nach Dateigröße gewichtet), dann das load-Ereignis
+       des Fensters; 100 % wird erst gesetzt, wenn das Spiel spielbereit ist (__samixReady aus app.js).
+       Balken und Prozentzahl werden pro Bild aus demselben Wert gezeichnet und sind daher immer synchron.
+       Bei Fehlern oder nach 10 s ohne Start erscheint eine Fehlermeldung mit „Tekrar Dene“. */
+    (function () {
+      var el = document.getElementById("splash"), fill = document.getElementById("splashFill"), pct = document.getElementById("splashPct");
+      var DURATION = 2000, cap = 0, shown = 0, last = 0, raf = 0, ready = false, closing = false, failed = false, idx = 0, timer;
+      var WEIGHTS = [0.16, 0.53, 0.05, 0.26]; /* words.js, aciklamalar.js, logic.js, app.js (≈ Dateigröße) */
+      /* Sprache des Ladebildschirms: gleiche Einstellung wie im Spiel (Standard Türkisch) */
+      var DE = false; try { DE = localStorage.getItem("imposter_lang_v1") === "de"; } catch (e) {}
+      var TXT = DE ? {
+        loading: "Wird geladen", err: "Fehler", title: "Spiel konnte nicht geladen werden",
+        msg: "Einige Dateien konnten nicht geladen werden. Prüfe deine Internetverbindung und ob alle Dateien vollständig sind.",
+        retry: "Erneut versuchen", slow: "Das Spiel braucht ungewöhnlich lange zum Laden. Bitte erneut versuchen.",
+        file: function (n) { return n + " konnte nicht geladen werden."; }
+      } : {
+        loading: "Yükleniyor", err: "Hata", title: "Oyun yüklenemedi",
+        msg: "Bazı dosyalar yüklenemedi. İnternet bağlantınızı ve dosyaların eksiksiz olduğunu kontrol edin.",
+        retry: "Tekrar Dene", slow: "Oyunun yüklenmesi alışılmadık derecede uzun sürüyor. Lütfen tekrar deneyin.",
+        file: function (n) { return n + " yüklenemedi."; }
+      };
+      if (DE) {
+        document.documentElement.setAttribute("lang", "de");
+        el.setAttribute("aria-label", TXT.loading);
+        el.querySelector(".sp-err h2").textContent = TXT.title;
+        document.getElementById("splashErrMsg").textContent = TXT.msg;
+        document.getElementById("splashRetry").textContent = TXT.retry;
+      }
+      (function () { /* Hell/Dunkel wie im Spiel */
+        var th = "dark";
+        try { var s = JSON.parse(localStorage.getItem("imposter_tr_ayarlar_v1")); if (s && (s.theme === "light" || s.theme === "auto")) th = s.theme; } catch (e) {}
+        var light = th === "light" || (th === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches);
+        el.setAttribute("data-sp", light ? "light" : "dark");
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute("content", light ? "#f2f2f7" : "#07080d");
+      })();
+      function draw(v) {
+        fill.style.transform = "translate3d(" + ((v - 1) * 100).toFixed(3) + "%,0,0)";
+        pct.textContent = Math.min(100, Math.floor(v * 100 + 1e-6)) + "%"; /* 100 % nur bei v = 1 */
+      }
+      function out() {
+        if (closing) return; closing = true; draw(1);
+        setTimeout(function () {
+          el.classList.add("out");
+          setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 420);
+        }, 120);
+      }
+      function tick(now) {
+        raf = 0; if (failed || closing) return;
+        var dt = Math.max(0, Math.min(((now || last) - last) / 1000, 0.1)); last = Math.max(last, now || last);
+        /* gleichmäßig: 0 → 100 % in DURATION ms; nur gebremst, wenn das Spiel real noch nicht so weit ist (cap) */
+        if (shown < cap) { shown = Math.min(cap, shown + dt * 1000 / DURATION); draw(shown); }
+        if (shown >= 1 && ready) { out(); return; }
+        if (shown < cap) raf = requestAnimationFrame(tick);
+      }
+      function setTarget(p) { /* p = realer Ladestand; die Anzeige darf ihn nie überholen, 100 % erst bei Spielstart */
+        if (failed || closing) return;
+        p = Math.min(p, ready ? 1 : 0.99); if (p <= cap) return; cap = p;
+        if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+      }
+      function fail(msg) {
+        if (closing) return; failed = true; clearTimeout(timer); if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        var fm = msg && String(msg).match(/^([\w.\-]+) yüklenemedi\.$/); /* Dateimeldungen aus den onerror-Attributen in die Sprache übersetzen */
+        if (fm) msg = TXT.file(fm[1]);
+        if (msg) document.getElementById("splashErrMsg").textContent = msg; /* spätere, genauere Meldung darf die erste überschreiben */
+        el.classList.add("failed"); el.setAttribute("aria-label", TXT.err);
+      }
+      window.__samixStep = function () {
+        if (ready || idx >= WEIGHTS.length) return;
+        var c = 0; for (var i = 0; i <= idx; i++) c += WEIGHTS[i]; idx++;
+        setTarget(0.05 + 0.85 * c);
+      };
+      window.__samixReady = function () {
+        if (ready) return; ready = true; clearTimeout(timer);
+        if (failed) { failed = false; el.classList.remove("failed"); el.setAttribute("aria-label", TXT.loading); } /* z. B. optionale Datei fehlte, Spiel läuft trotzdem */
+        setTarget(1);
+        setTimeout(out, DURATION + 2500); /* Sicherheitsnetz, falls der Browser keine Frames zeichnet (z. B. Hintergrund-Tab) */
+      };
+      window.__samixFail = fail;
+      document.getElementById("splashRetry").addEventListener("click", function () { location.reload(); });
+      window.addEventListener("load", function () { setTarget(0.97); });
+      window.addEventListener("error", function (e) {
+        if (!ready && !(e.target && e.target !== window && e.target.tagName === "IMG")) fail();
+      }, true);
+      timer = setTimeout(function () { if (!ready) fail(TXT.slow); }, 10000);
+      draw(0); setTarget(0.05); /* HTML geladen */
+    })();
+  </script>
+
+  <div class="bg" aria-hidden="true">
+    <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+  </div>
+  <main id="app" role="main"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true"></div>
+  <noscript><div style="position:fixed;inset:0;z-index:2000;background:#000;color:#fff;display:grid;place-items:center;padding:24px;text-align:center;font-family:system-ui,sans-serif">Bu oyunun çalışması için JavaScript gereklidir.</div></noscript>
+
+  <script src="words.js" onload="window.__samixStep&&window.__samixStep()" onerror="window.__samixFail&&window.__samixFail('words.js yüklenemedi.')"></script>
+  <script src="aciklamalar.js" onload="window.__samixStep&&window.__samixStep()"></script>
+  <script>try { if (localStorage.getItem("imposter_lang_v1") === "de") document.write('<script src="de.js" onerror="window.__samixFail&&window.__samixFail(\'de.js yüklenemedi.\')"><\/script>'); } catch (e) {}</script>
+  <script src="logic.js" onload="window.__samixStep&&window.__samixStep()" onerror="window.__samixFail&&window.__samixFail('logic.js yüklenemedi.')"></script>
+  <script src="app.js" onload="window.__samixStep&&window.__samixStep()" onerror="window.__samixFail&&window.__samixFail('app.js yüklenemedi.')"></script>
+</body>
+</html>
